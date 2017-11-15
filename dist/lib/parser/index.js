@@ -1,8 +1,8 @@
 "use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-const Parserts = require("./Parser");
-exports.Parser = Parserts;
-const ParserCriteriats = require("./ParserCriteria");
-exports.ParserCriteria = ParserCriteriats;
-const PresenceCriteriats = require("./PresenceCriteria");
-exports.PresenceCriteria = PresenceCriteriats;
+__export(require("./Parser"));
+__export(require("./ParserCriteria"));
+__export(require("./PresenceCriteria"));

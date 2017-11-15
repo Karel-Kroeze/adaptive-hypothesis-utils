@@ -15,8 +15,6 @@
   "license": "MIT",
   "devDependencies": {
     "barrelsby": "^0.0.8",
-    "create-index": "^2.2.0",
-    "dts-generator": "^2.1.0",
     "typescript": "^2.6.1"
   },
   "dependencies": {

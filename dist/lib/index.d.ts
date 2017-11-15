@@ -1,16 +1,4 @@
-import * as coreindexts from "./core/index";
-import * as fetchindexts from "./fetch/index";
-import * as parserindexts from "./parser/index";
-import * as typesindexts from "./types/index";
-export declare const core: {
-    index: typeof coreindexts;
-};
-export declare const fetch: {
-    index: typeof fetchindexts;
-};
-export declare const parser: {
-    index: typeof parserindexts;
-};
-export declare const types: {
-    index: typeof typesindexts;
-};
+export * from "./core/index";
+export * from "./fetch/index";
+export * from "./parser/index";
+export * from "./types/index";

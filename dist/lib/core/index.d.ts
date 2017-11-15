@@ -1,10 +1,5 @@
-import * as Configts from "./Config";
-import * as Constantsts from "./Constants";
-import * as Hypothesis_Extensionsts from "./Hypothesis_Extensions";
-import * as IOts from "./IO";
-import * as Utilsts from "./Utils";
-export { Configts as Config };
-export { Constantsts as Constants };
-export { Hypothesis_Extensionsts as Hypothesis_Extensions };
-export { IOts as IO };
-export { Utilsts as Utils };
+export * from "./Config";
+export * from "./Constants";
+export * from "./Hypothesis_Extensions";
+export * from "./IO";
+export * from "./Utils";

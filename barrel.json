@@ -2,7 +2,7 @@
     "directory": "./src/lib",
     "delete": true,
     "location": "all",
-    "structure": "filesystem",
+    "structure": "flat",
     "exclude": [
         "CriteriumErrorReason.ts",
         ".d.ts"

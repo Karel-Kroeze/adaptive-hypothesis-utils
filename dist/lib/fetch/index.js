@@ -1,10 +1,9 @@
 "use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-const DBDumpParserts = require("./DBDumpParser");
-exports.DBDumpParser = DBDumpParserts;
-const HypothesisStoryts = require("./HypothesisStory");
-exports.HypothesisStory = HypothesisStoryts;
-const LogParserts = require("./LogParser");
-exports.LogParser = LogParserts;
-const LogTypets = require("./LogType");
-exports.LogType = LogTypets;
+__export(require("./DBDumpParser"));
+__export(require("./HypothesisStory"));
+__export(require("./LogParser"));
+__export(require("./LogType"));

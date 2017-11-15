@@ -1,4 +1,4 @@
-enum CriteriumErrorReason {
+export enum CriteriumErrorReason {
     Syntax,
     Incomplete,
     Criterium

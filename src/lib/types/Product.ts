@@ -1,4 +1,5 @@
 import { Actor, MetadataPart } from "./LogAction";
+import { CriteriumErrorReason } from "../parser/CriteriumErrorReason";
 
 export interface IHypothesis {
     approved: boolean,
