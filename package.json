@@ -1,0 +1,38 @@
+{
+  "name": "@golab/adaptive-hypotheses",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
+  "scripts": {
+    "build": "tsc && node ./scripts/create-indeces.js"
+  },
+  "author": "Karel A. Kroeze <k.a.kroeze@utwente.nl>",
+  "license": "MIT",
+  "devDependencies": {
+    "create-index": "^2.2.0",
+    "dts-generator": "^2.1.0",
+    "typescript": "^2.6.1"
+  },
+  "dependencies": {
+    "@types/bluebird": "^3.5.18",
+    "@types/lodash": "^4.14.85",
+    "@types/mkdirp": "^0.5.1",
+    "@types/mz": "^0.0.32",
+    "@types/nearley": "^2.11.0",
+    "@types/progress": "^2.0.0",
+    "@types/request-promise": "^4.1.39",
+    "bluebird": "^3.5.1",
+    "jsmin": "^1.0.1",
+    "json2csv": "^3.11.5",
+    "lodash": "^4.17.4",
+    "mkdirp": "^0.5.1",
+    "mz": "^2.7.0",
+    "nearley": "^2.11.0",
+    "progress": "^2.0.0",
+    "progress-stream": "^2.0.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "stream-json": "^0.5.2"
+  }
+}
