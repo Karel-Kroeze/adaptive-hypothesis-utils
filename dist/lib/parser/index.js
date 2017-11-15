@@ -1,6 +1,8 @@
-// @create-index
-
-export { default as Parser } from './Parser.js';
-export { default as ParserCriteria } from './ParserCriteria.js';
-export { default as PresenceCriteria } from './PresenceCriteria.js';
-
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(require("./Parser"));
+__export(require("./ParserCriteria"));
+__export(require("./PresenceCriteria"));

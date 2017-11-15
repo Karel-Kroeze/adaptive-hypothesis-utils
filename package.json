@@ -5,11 +5,12 @@
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
   "scripts": {
-    "build": "tsc && node ./scripts/create-indeces.js"
+    "build": "barrelsby -c ./barrel.json && tsc && node ./scripts/create-indeces.js"
   },
   "author": "Karel A. Kroeze <k.a.kroeze@utwente.nl>",
   "license": "MIT",
   "devDependencies": {
+    "barrelsby": "^0.0.8",
     "create-index": "^2.2.0",
     "dts-generator": "^2.1.0",
     "typescript": "^2.6.1"

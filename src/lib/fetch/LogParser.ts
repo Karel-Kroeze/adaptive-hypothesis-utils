@@ -88,7 +88,7 @@ export class LogParser {
 
     private updateHypothesis( hypothesis: IHypothesis, actor: Actor, timestamp: string ){
         this.addParseResultsIfMissing( hypothesis, true )        
-        let id: string = hypothesis.id;
+        let id: string = <string>hypothesis.id;
         if (!this.hypotheses.hasOwnProperty( id )){
             this.hypotheses[id] = new HypothesisStory( hypothesis, actor, timestamp );
         } else {

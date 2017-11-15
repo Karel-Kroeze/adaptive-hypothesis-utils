@@ -1,7 +1,9 @@
-// @create-index
-
-export { default as Config } from './Config.js';
-export { default as Constants } from './Constants.js';
-export { default as Hypothesis_Extensions } from './Hypothesis_Extensions.js';
-export { default as IO } from './IO.js';
-
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(require("./Config"));
+__export(require("./Constants"));
+__export(require("./Hypothesis_Extensions"));
+__export(require("./IO"));

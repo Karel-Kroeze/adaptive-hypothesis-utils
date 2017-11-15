@@ -1,6 +1,8 @@
-// @create-index
-
-export { default as core } from './core';
-export { default as fetch } from './fetch';
-export { default as parser } from './parser';
-
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(require("./core/index"));
+__export(require("./fetch/index"));
+__export(require("./parser/index"));

@@ -3,7 +3,7 @@ interface IHypothesis {
     tested: boolean,
     elements: IHypothesisElement[],
     confidence: number,
-    id: string,
+    id?: string,
     state: string,
     showConfidenceMeter: boolean
 

@@ -42,6 +42,13 @@ declare module '@golab/adaptive-hypotheses/core/Hypothesis_Extensions' {
 	export function getText(hypothesis: IHypothesis): string;
 
 }
+declare module '@golab/adaptive-hypotheses/core/index' {
+	export * from '@golab/adaptive-hypotheses/core/index/Config';
+	export * from '@golab/adaptive-hypotheses/core/index/Constants';
+	export * from '@golab/adaptive-hypotheses/core/index/Hypothesis_Extensions';
+	export * from '@golab/adaptive-hypotheses/core/index/IO';
+
+}
 declare module '@golab/adaptive-hypotheses/fetch/DBDumpParser' {
 	export function ParseDBDump(file: string, arrayify?: boolean, sort?: boolean): Promise<LogAction[]>;
 
@@ -137,9 +144,9 @@ declare module '@golab/adaptive-hypotheses/parser/PresenceCriteria' {
 
 }
 declare module '@golab/adaptive-hypotheses/parser/Parser' {
-	import * as nearley from 'nearley';
-	import { ParseCriterium } from '@golab/adaptive-hypotheses/lib/parser/ParserCriteria';
-	import { PresenceCriterium } from '@golab/adaptive-hypotheses/lib/parser/PresenceCriteria';
+	import * as nearley from '@golab/adaptive-hypotheses/parser/Parser/nearley';
+	import { ParseCriterium } from '@golab/adaptive-hypotheses/parser/Parser/ParserCriteria';
+	import { PresenceCriterium } from '@golab/adaptive-hypotheses/parser/Parser/PresenceCriteria';
 	export function CreateParseResult(test: string, success: boolean, result: any, reason?: CriteriumErrorReason): ICriteriumResult;
 	export function GetHypothesisString(h: IHypothesis): string;
 	export class HypothesisParser {
@@ -156,8 +163,8 @@ declare module '@golab/adaptive-hypotheses/parser/Parser' {
 
 }
 declare module '@golab/adaptive-hypotheses/fetch/LogParser' {
-	import { LogType } from '@golab/adaptive-hypotheses/lib/fetch/LogType';
-	import { HypothesisStory } from '@golab/adaptive-hypotheses/lib/fetch/HypothesisStory';
+	import { LogType } from '@golab/adaptive-hypotheses/fetch/LogParser/LogType';
+	import { HypothesisStory } from '@golab/adaptive-hypotheses/fetch/LogParser/HypothesisStory';
 	export type products = {
 	    [type: string]: any;
 	};
@@ -200,6 +207,25 @@ declare module '@golab/adaptive-hypotheses/fetch/LogParser' {
 	    static getLogType(log: LogAction): LogType;
 	}
 	export function extractUniqueUsers(logs: LogAction[]): string[];
+
+}
+declare module '@golab/adaptive-hypotheses/fetch/index' {
+	export * from '@golab/adaptive-hypotheses/fetch/index/DBDumpParser';
+	export * from '@golab/adaptive-hypotheses/fetch/index/HypothesisStory';
+	export * from '@golab/adaptive-hypotheses/fetch/index/LogParser';
+	export * from '@golab/adaptive-hypotheses/fetch/index/LogType';
+
+}
+declare module '@golab/adaptive-hypotheses/parser/index' {
+	export * from '@golab/adaptive-hypotheses/parser/index/Parser';
+	export * from '@golab/adaptive-hypotheses/parser/index/ParserCriteria';
+	export * from '@golab/adaptive-hypotheses/parser/index/PresenceCriteria';
+
+}
+declare module '@golab/adaptive-hypotheses/index' {
+	export * from '@golab/adaptive-hypotheses/index/core/index';
+	export * from '@golab/adaptive-hypotheses/index/fetch/index';
+	export * from '@golab/adaptive-hypotheses/index/parser/index';
 
 }
 /**
@@ -399,8 +425,8 @@ interface IProduct {
 }
 
 interface IHypothesisStory extends IProduct {
-    snapshots: IHypothesis[];
-    updates: IHypothesis[];
+    snapshots: IHypothesisSnapshot[];
+    updates: IHypothesisUpdate[];
 }
 
 interface IHypothesisElement {
