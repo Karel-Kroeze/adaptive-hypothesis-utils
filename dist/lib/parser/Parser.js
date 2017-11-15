@@ -1,6 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const nearley = require("nearley");
+var CriteriumErrorReason;
+(function (CriteriumErrorReason) {
+    CriteriumErrorReason[CriteriumErrorReason["Syntax"] = 0] = "Syntax";
+    CriteriumErrorReason[CriteriumErrorReason["Incomplete"] = 1] = "Incomplete";
+    CriteriumErrorReason[CriteriumErrorReason["Criterium"] = 2] = "Criterium";
+})(CriteriumErrorReason = exports.CriteriumErrorReason || (exports.CriteriumErrorReason = {}));
 function CreateParseResult(test, success, result, reason = CriteriumErrorReason.Criterium) {
     if (success)
         return {
@@ -34,14 +40,17 @@ class HypothesisParser {
         this.debug = debug;
     }
     TryParse(hypothesis) {
-        hypothesis.parseResults = [
-            ...this.DoPresenceCriteria(hypothesis, this.presenceCriteria),
-            ...this.DoParseCriteria(hypothesis, this.parseCriteria)
-        ];
+        hypothesis.parseResults = {
+            coder: "Parser",
+            results: [
+                ...this.DoPresenceCriteria(hypothesis, this.presenceCriteria),
+                ...this.DoParseCriteria(hypothesis, this.parseCriteria)
+            ]
+        };
         // console feedback
         if (this.debug) {
             console.log("\n" + GetHypothesisString(hypothesis));
-            for (let result of hypothesis.parseResults) {
+            for (let result of hypothesis.parseResults.results) {
                 if (result.success) {
                     console.log("\t[ OK   ]\t" + result.test);
                 }

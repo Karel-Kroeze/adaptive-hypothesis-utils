@@ -1,4 +1,6 @@
 import * as _ from "lodash";
+import { IHypothesisStory, IHypothesisSnapshot, IHypothesisUpdate, IHypothesis } from "../types/Product";
+import { Actor } from "../types/LogAction";
 
 export class HypothesisStory implements IHypothesisStory {
     actor: Actor;

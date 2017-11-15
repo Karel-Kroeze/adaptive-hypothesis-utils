@@ -1,5 +1,10 @@
 {
     "directory": "./src/lib",
     "delete": true,
-    "location": "all"
+    "location": "all",
+    "structure": "filesystem",
+    "exclude": [
+        "CriteriumErrorReason.ts",
+        ".d.ts"
+    ]
 }

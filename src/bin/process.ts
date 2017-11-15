@@ -2,8 +2,12 @@
 import * as docopt from 'docopt';
 import * as fs from 'mz/fs';
 import * as path from 'path';
-import { getDataConfig, checkOutputDir, ReadJsonArray, extractUniqueUsers, Write, filename, LogParser, LogType, DataConfig_Files } from './index';
-import { FatalError } from './core/Utils';
+import { FatalError } from '../lib/core/Utils';
+import { getDataConfig, DataConfig_Files } from '../lib/core/Config';
+import { checkOutputDir, ReadJsonArray, Write, filename } from '../lib/core/IO';
+import { LogParser, extractUniqueUsers } from '../lib/fetch/LogParser';
+import { LogType } from '../lib/fetch/LogType';
+import { LogAction } from '../lib/types/LogAction';
 
 const encoding = 'utf8';
 const DEFAULT_PREFIX: string = 'by product';

@@ -1,3 +1,4 @@
+import { IHypothesis, ICriteriumResult, IHypothesisElement } from "../types/Product";
 export declare class PresenceCriterium {
     test: string;
     validator: (hypothesis: IHypothesis) => boolean;

@@ -1,3 +1,4 @@
+import { LogAction } from '../types/LogAction';
 export declare function checkOutputDir(location: string, create?: boolean, file?: boolean): void;
 export declare function Write<T>(dir: string | false, name: string, data: T, ext?: "json" | "csv", prefix?: string): Promise<T>;
 export declare function ReadJsonArray(file: string): Promise<any>;

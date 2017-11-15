@@ -1,3 +1,4 @@
+import { ICriteriumResult } from '../types/Product';
 export interface NearleyParse {
     dependent: NearleyParseAction[];
     independent: NearleyParseAction[];

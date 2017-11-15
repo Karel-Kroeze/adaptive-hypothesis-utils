@@ -4,6 +4,8 @@ import * as mkdirp from 'mkdirp'
 import * as request from 'request-promise'
 import * as progressStream from 'progress-stream'
 import * as ProgressBar from 'progress'
+import { LogAction } from '../types/LogAction';
+import { ProviderIdQuery } from '../types/Query';
 
 const StreamArray = require('stream-json/utils/StreamArray');
 const jsmin = require('jsmin').jsmin 

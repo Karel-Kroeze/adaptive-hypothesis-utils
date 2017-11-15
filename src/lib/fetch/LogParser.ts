@@ -9,6 +9,8 @@ import { HypothesisParser } from "../parser/Parser";
 import { LanguageHandler, ManipulationCriterium, CVSCriterium, QualificationCriterium } from "../parser/ParserCriteria";
 import { VariablesPresentCriterium, ModifiersPresentCriterium } from "../parser/PresenceCriteria";
 import { getText } from "../core/Hypothesis_Extensions";
+import { LogAction, Actor } from "../types/LogAction";
+import { ICriteriumResult, IHypothesis, IHypothesisAdaptive, IExpectation, IExperiment, IConclusion } from "../types/Product";
 
 const grammar: nearley.Grammar = require("@golab/hypothesis-grammars")['circuits-nl'];
 const encoding = "utf8";
@@ -116,7 +118,7 @@ export class LogParser {
             new CVSCriterium( languageHandler ),
             new QualificationCriterium( languageHandler )
         ]
-        let parser = new HypothesisParser( grammar, presenceCriteria, parserCriteria, true )
+        let parser = new HypothesisParser( grammar, presenceCriteria, parserCriteria, false )
         parser.TryParse( hypothesis );
     }
 
@@ -158,7 +160,7 @@ export class LogParser {
                         results = code.results;
                 }
                 if (!results && h.parseResults)
-                    results = h.parseResults;
+                    results = h.parseResults.results;
                 if (!results){
                     console.error( `No results for ${id} (${getText(h)})`)
                     continue;                    

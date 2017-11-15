@@ -1,5 +1,6 @@
 import * as fs from "mz/fs";
 import * as IO from "../core/IO";
+import { LogAction } from "../types/LogAction";
 
 const encoding = 'utf-8';
 

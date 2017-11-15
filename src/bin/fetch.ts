@@ -2,7 +2,9 @@
 import * as docopt from 'docopt';
 import * as bluebird from 'bluebird';
 import * as fs from 'mz/fs';
-import { updateDataConfig, getDataConfig, filename, ParseDBDump, Write, Fetch } from './index';
+import {updateDataConfig, getDataConfig} from '../lib/core/Config';
+import {filename, Fetch, Write} from '../lib/core/IO';
+import {ParseDBDump} from '../lib/fetch/DBDumpParser';
 
 const Promise = bluebird.Promise;
 const docstring = `

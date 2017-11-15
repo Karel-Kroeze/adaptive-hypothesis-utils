@@ -2,7 +2,7 @@
  * Created by SikkenJ on 23-2-2017.
  */
 
-interface Metadata {
+export interface Metadata {
     id: string,
     published: string,
     publishedServer?: string,
@@ -12,25 +12,25 @@ interface Metadata {
     provider: Provider
 }
 
-interface MetadataPart {
+export interface MetadataPart {
     id: string,
     objectType: string,
     displayName: string
 }
 
-interface Actor extends MetadataPart {
+export interface Actor extends MetadataPart {
 
 }
 
-interface Target extends MetadataPart {
+export interface Target extends MetadataPart {
     forApplication?: string
 }
 
-interface Generator extends MetadataPart {
+export interface Generator extends MetadataPart {
     url: string
 }
 
-interface Provider extends MetadataPart {
+export interface Provider extends MetadataPart {
     url: string,
     inquiryPhase: string,
     inquiryPhaseId: string,
@@ -38,19 +38,18 @@ interface Provider extends MetadataPart {
     displayName: string
 }
 
-type contentVerb = "add" | "remove" | "change" | "clear"
-type processVerb = "access" | "start" | "cancel" | "send" | "receive"
-type storageVerb = "new" | "open" | "create" | "update" | "delete"
-type otherVerb = "application_started" | "phase_changed"
-type verb = contentVerb | processVerb | storageVerb | otherVerb
+export type contentVerb = "add" | "remove" | "change" | "clear"
+export type processVerb = "access" | "start" | "cancel" | "send" | "receive"
+export type storageVerb = "new" | "open" | "create" | "update" | "delete"
+export type otherVerb = "application_started" | "phase_changed"
+export type verb = contentVerb | processVerb | storageVerb | otherVerb
 
-type integer = number
-type dataString = string
+export type integer = number
 
-interface LogAction {
+export interface LogAction {
     id: string,
-    published: dataString,
-    publishedLA?: dataString,
+    published: string,
+    publishedLA?: string,
     actor: Actor,
     target: Target,
     generator: Generator,
@@ -60,13 +59,13 @@ interface LogAction {
     object: any
 }
 
-interface PackageInfo {
+export interface PackageInfo {
     name: string
     buildMillis: integer
     version: string
 }
 
-interface DeviceInfo {
+export interface DeviceInfo {
     navigator: {
         appCodeName: string
         appName: string
@@ -100,12 +99,12 @@ interface DeviceInfo {
     }
 }
 
-interface Resource {
+export interface Resource {
     metadata: Metadata,
     content?: any
 }
 
-interface ErrorLogAction extends LogAction {
+export interface ErrorLogAction extends LogAction {
     verb: "send"
     object: {
         objectType: "error"

@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import { CreateParseResult } from "./Parser";
+import { ICriteriumResult } from '../types/Product';
 
 export interface NearleyParse {
         dependent: NearleyParseAction[]

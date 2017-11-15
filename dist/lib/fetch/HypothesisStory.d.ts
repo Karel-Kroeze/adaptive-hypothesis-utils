@@ -1,3 +1,5 @@
+import { IHypothesisStory, IHypothesisSnapshot, IHypothesisUpdate, IHypothesis } from "../types/Product";
+import { Actor } from "../types/LogAction";
 export declare class HypothesisStory implements IHypothesisStory {
     actor: Actor;
     snapshots: IHypothesisSnapshot[];

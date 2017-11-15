@@ -1,5 +1,7 @@
 import { LogType } from './LogType';
 import { HypothesisStory } from './HypothesisStory';
+import { LogAction } from "../types/LogAction";
+import { IExpectation, IExperiment, IConclusion } from "../types/Product";
 export declare type products = {
     [type: string]: any;
 };

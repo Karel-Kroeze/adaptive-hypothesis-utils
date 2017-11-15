@@ -1,7 +1,12 @@
 import * as nearley from 'nearley';
 import {ParseCriterium, NearleyParse} from './ParserCriteria'; 
 import {PresenceCriterium} from './PresenceCriteria';
-
+import { IHypothesis, ICriteriumResult, ICriteriumError } from '../types/Product';
+export enum CriteriumErrorReason {
+    Syntax,
+    Incomplete,
+    Criterium
+}
 export function CreateParseResult( test: string, success: boolean, result: any, reason: CriteriumErrorReason = CriteriumErrorReason.Criterium ): ICriteriumResult {
     if (success)
         return {
@@ -37,15 +42,18 @@ export class HypothesisParser {
     ) {}
 
     public TryParse( hypothesis: IHypothesis ): void {
-        hypothesis.parseResults = [
-            ... this.DoPresenceCriteria( hypothesis, this.presenceCriteria ),
-            ... this.DoParseCriteria( hypothesis, this.parseCriteria )
-        ];
+        hypothesis.parseResults = {
+            coder: "Parser",
+            results: [
+                ... this.DoPresenceCriteria( hypothesis, this.presenceCriteria ),
+                ... this.DoParseCriteria( hypothesis, this.parseCriteria )
+            ]
+        };
 
         // console feedback
         if (this.debug) {
             console.log( "\n" + GetHypothesisString( hypothesis ) )
-            for (let result of hypothesis.parseResults) {
+            for (let result of hypothesis.parseResults.results) {
                 if (result.success) {
                     console.log( "\t[ OK   ]\t" + result.test );
                 } else {

@@ -1,4 +1,5 @@
 import { CreateParseResult } from "./Parser";
+import { IHypothesis, ICriteriumError, ICriteriumResult, IHypothesisElement } from "../types/Product";
 
 export class PresenceCriterium {
     constructor( 

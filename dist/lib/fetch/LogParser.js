@@ -102,7 +102,7 @@ class LogParser {
             new ParserCriteria_1.CVSCriterium(languageHandler),
             new ParserCriteria_1.QualificationCriterium(languageHandler)
         ];
-        let parser = new Parser_1.HypothesisParser(grammar, presenceCriteria, parserCriteria, true);
+        let parser = new Parser_1.HypothesisParser(grammar, presenceCriteria, parserCriteria, false);
         parser.TryParse(hypothesis);
     }
     updateExperiment(log) {
@@ -140,7 +140,7 @@ class LogParser {
                         results = code.results;
                 }
                 if (!results && h.parseResults)
-                    results = h.parseResults;
+                    results = h.parseResults.results;
                 if (!results) {
                     console.error(`No results for ${id} (${Hypothesis_Extensions_1.getText(h)})`);
                     continue;

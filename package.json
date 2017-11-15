@@ -5,7 +5,11 @@
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
   "scripts": {
-    "build": "barrelsby -c ./barrel.json && tsc && node ./scripts/create-indeces.js"
+    "build": "barrelsby -c ./barrel.json && tsc"
+  },
+  "bin": {
+    "fetch": "./dist/bin/fetch.js",
+    "process": "./dist/bin/process.js"
   },
   "author": "Karel A. Kroeze <k.a.kroeze@utwente.nl>",
   "license": "MIT",
