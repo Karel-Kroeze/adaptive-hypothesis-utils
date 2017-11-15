@@ -16,6 +16,7 @@
     "typescript": "^2.6.1"
   },
   "dependencies": {
+    "@golab/hypothesis-grammars": "Karel-Kroeze/adaptive-hypothesis-grammars",
     "@types/bluebird": "^3.5.18",
     "@types/lodash": "^4.14.85",
     "@types/mkdirp": "^0.5.1",

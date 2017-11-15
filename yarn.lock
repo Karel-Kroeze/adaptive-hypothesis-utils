@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@golab/hypothesis-grammars@Karel-Kroeze/adaptive-hypothesis-grammars":
+  version "1.0.0"
+  resolved "https://codeload.github.com/Karel-Kroeze/adaptive-hypothesis-grammars/tar.gz/5f396d29cb04a797d01e2944e0f4226e85aeee1d"
+  dependencies:
+    export-dir "^0.1.2"
+    lodash "^4.17.4"
+
 "@types/bluebird@*", "@types/bluebird@^3.5.18":
   version "3.5.18"
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.18.tgz#6a60435d4663e290f3709898a4f75014f279c4d6"
@@ -301,6 +308,10 @@ execa@^0.7.0:
     p-finally "^1.0.0"
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
+
+export-dir@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/export-dir/-/export-dir-0.1.2.tgz#f3034253d7e717d0b02af43fb3762d57b5f0aef8"
 
 extend@~3.0.1:
   version "3.0.1"
