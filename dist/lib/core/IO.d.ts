@@ -1,6 +1,6 @@
 import { LogAction } from '../types/LogAction';
 export declare function checkOutputDir(location: string, create?: boolean, file?: boolean): void;
-export declare function Write<T>(dir: string | false, name: string, data: T, ext?: "json" | "csv", prefix?: string): Promise<T>;
+export declare function Write(dir: string | false, name: string, data: any, ext?: "json" | "csv", prefix?: string, largeFile?: boolean): Promise<any>;
 export declare function ReadJsonArray(file: string): Promise<any>;
 export declare function filename(dir: string | false, name: string, ext: "json" | "csv", prefix?: string): string;
 export declare function PromiseMkdirp(dir: string): Promise<string>;

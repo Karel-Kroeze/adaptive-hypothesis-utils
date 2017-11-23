@@ -7,6 +7,7 @@ const request = require("request-promise");
 const progressStream = require("progress-stream");
 const ProgressBar = require("progress");
 const StreamArray = require('stream-json/utils/StreamArray');
+const JSONStream = require('JSONStream');
 const jsmin = require('jsmin').jsmin;
 const LA_URL = "http://golab-dev.collide.info/analytics/log_data";
 const encoding = 'utf8';
@@ -20,17 +21,64 @@ function checkOutputDir(location, create = true, file = false) {
         fs.statSync(location);
 }
 exports.checkOutputDir = checkOutputDir;
-function Write(dir, name, data, ext = "json", prefix = "") {
+function Write(dir, name, data, ext = "json", prefix = "", largeFile = false) {
     let _path = filename(dir, name, ext, prefix);
     dir = path.dirname(_path);
     // make sure dir exists
     return PromiseMkdirp(dir)
-        .then((_) => { return (ext === "json") ? JSON.stringify(data, null, 4) : data.toString(); })
-        .then(data => { fs.writeFile(_path, data, encoding); return data; })
+        .then((_) => {
+        if (ext === "csv") {
+            fs.writeFile(_path, data.toString(), encoding);
+        }
+        else {
+            if (largeFile) {
+                JSONWriteStream(_path, data);
+            }
+            else {
+                fs.writeFile(_path, JSON.stringify(data, null, 4));
+            }
+        }
+    })
         .catch(console.error)
         .then((_) => { return data; });
 }
 exports.Write = Write;
+function JSONWriteStream(path, data) {
+    if (Array.isArray(data)) {
+        JSONWriteStreamArray(path, data);
+    }
+    else {
+        JSONWriteStreamObject(path, data);
+    }
+}
+function JSONWriteStreamArray(path, data) {
+    const stringify = JSONStream.stringify();
+    const write = fs.createWriteStream(path);
+    stringify.pipe(write);
+    stringify.on("error", report);
+    write.on("error", report);
+    for (const obj of data) {
+        console.log(obj);
+        stringify.write(obj);
+    }
+    stringify.end();
+}
+function JSONWriteStreamObject(path, data) {
+    const stringify = JSONStream.stringifyObject();
+    const write = fs.createWriteStream(path);
+    stringify.pipe(write);
+    stringify.on("error", report);
+    write.on("error", report);
+    for (const key in data) {
+        console.log(key);
+        stringify.write([key, data[key]]);
+    }
+    stringify.end();
+}
+function report(err) {
+    console.error(err);
+    throw err;
+}
 function ReadJsonArray(file) {
     return new Promise(function (resolve, reject) {
         let jsonStream = StreamArray.make();

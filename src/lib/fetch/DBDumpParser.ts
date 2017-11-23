@@ -1,39 +1,39 @@
 import * as fs from "mz/fs";
 import * as IO from "../core/IO";
 import { LogAction } from "../types/LogAction";
+import * as lineReader from 'line-by-line';
 
 const encoding = 'utf-8';
 
 export function ParseDBDump(file: string, arrayify: boolean = true, sort: boolean = true): Promise<LogAction[]> {
-    // first, read and parse the dump -> json -> array
-    return fs.readFile(file, encoding)
-
-        // (conditionally) add array notation
-        .then(datastring => {
-            if (arrayify) {
-                let data = datastring.split("\n") // split into lines
-                return "[\n" + data.join(",\n") + "\n]" // add commas between lines, and wrap in []
-
-            } else {
-                return datastring
+    return new Promise( (resolve, reject) => {
+        const lr = new lineReader( file );
+        const data: LogAction[] = [];
+        
+        lr.on( "error", (err) => reject( err ) );
+        lr.on( "line", (line: string ) => {
+            try {
+                // parse to json, remove trailing comma if needed
+                let datum = JSON.parse( line.replace( /,$/, "" ) );
+                
+                // properly attach date
+                datum.publishedLA = datum.publishedLA.$date;
+    
+                // add to data
+                data.push( datum );
+            } catch (err) {
+                console.error( `Could not parse "${line}"; ${err}`);
             }
         })
-
-        // parse as JSON, correct the timestamps
-        .then(JSON.parse) // we now should have valid JSON, parse it to get an array of LogActions.
-        .then(data => data.map((datum: any) => { datum.publishedLA = datum.publishedLA.$date })) // assign published date
-
-        // sort
-        .then(data => {
+        lr.on( "end", () => {
             if (sort) {
-                return data.sort((a: LogAction, b: LogAction) => { // sort by name -> date
+                data.sort((a: LogAction, b: LogAction) => { // sort by date
                     let DateA = new Date( a.publishedLA || '0' );
                     let DateB = new Date( b.publishedLA || '0' );
                     return DateA.getTime() - DateB.getTime();
                 })
             }
-            else {
-                return data;
-            }
-        });
+            return resolve( data );
+        })
+    })
 }

@@ -3,9 +3,9 @@ import * as jsmin from 'jsmin';
 import {Write} from './IO';
 import {encoding} from './Constants';
 
-export function updateDataConfig( name: string, condition: string, provider: string, path: string, config?: DataConfig ): DataConfig
-export function updateDataConfig( name: string, condition: string, providers: string[], paths: string[], config?: DataConfig ): DataConfig
-export function updateDataConfig( name: string, condition: string, provider: string | string[], target: string | string[], config?: DataConfig ): DataConfig {
+export function updateDataConfig( name: string, condition: string, provider: string, path: string, source?: dataSource, config?: DataConfig ): DataConfig
+export function updateDataConfig( name: string, condition: string, providers: string[], paths: string[], source?: dataSource, config?: DataConfig ): DataConfig
+export function updateDataConfig( name: string, condition: string, provider: string | string[], target: string | string[], source: dataSource = "la", config?: DataConfig ): DataConfig {
     config = config || getDataConfig();
     if (!config[name])
         config[name] = {};
@@ -22,7 +22,7 @@ export function updateDataConfig( name: string, condition: string, provider: str
         _condition.providers.push( <string>provider )
         _condition.providers = [ ... new Set( _condition.providers ) ] // unique id's only.
         if (target)
-            _condition.data[<string>provider] = { raw: target } // keyed by id, will be created or purged
+            _condition.data[<string>provider] = { raw: target, source: source } // keyed by id, will be created or purged
     }
 
     // multiple new datasets
@@ -34,7 +34,7 @@ export function updateDataConfig( name: string, condition: string, provider: str
         for ( let i = 0; i < target.length; i++ ){
             _condition.providers.push( <string>provider[i] )
             if (target[i])
-                _condition.data[provider[i]] = { raw: target[i] } // keyed by id, will be created or purged
+                _condition.data[provider[i]] = { raw: target[i], source: source } // keyed by id, will be created or purged
         }
         _condition.providers = [ ... new Set( _condition.providers ) ] // unique id's only.
     }
@@ -72,8 +72,10 @@ export interface DataConfig_Condition {
     }
 }
 
+export type dataSource = "la" | "raw";
 export interface DataConfig_Files {
     raw: string
+    source: dataSource
     users?: string
     expectations?: string
     hypotheses?: string

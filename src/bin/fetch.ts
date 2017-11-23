@@ -46,7 +46,7 @@ let db_dump: string = "";
 switch (mode) {
     case "db":
         db_dump = opts['<input_file>'];
-        input = opts['<provider_id>'];
+        input = opts['<provider_id>'][0];
         break;
     case "ids":
         input = opts['<provider_id>'];
@@ -106,7 +106,7 @@ switch (mode) {
                     for (let provider of condition.providers){
                         let file = filename( "./data/raw", provider, "json" )
                         fs.stat( file )
-                        .then( (_) => { updateDataConfig( experimentName, conditionName, provider, file, config ); },
+                        .then( (_) => { updateDataConfig( experimentName, conditionName, provider, file, "la", config ); },
                                 (err) => { console.log( "[ WARNING ] Couldn't find raw dataset", provider ) } )
                     }
                 }
@@ -117,15 +117,18 @@ switch (mode) {
     case "db":
         // parse a db dump as json, and update datasets.json
         console.log( "Parsing", db_dump, ", storing in", target);
-        ParseDBDump( db_dump, false, true ).then( logs => Write( false, target, logs, "json", prefix ) );        
-        updateDataConfig( name, condition, <string>input, target );
+        ParseDBDump( db_dump, false, true )
+            .then( logs => { console.log( logs.length ); return logs })
+            .then( logs => Write( "./data/raw", target, logs, "json", prefix, true ) )
+            .then( logs => updateDataConfig( name, condition, <string>input, filename( "./data/raw", target, "json" ), "raw" ) )
+            .catch( console.error );        
         break;
 
     case "ids":
         // download logs for provider id's given, and add metadata to datasets.json
         Promise.all( (<string[]>input).map( 
             ( id: string ) => Fetch( id )
-                .then( logs => Write( target, id, logs, "json", prefix ) )
+                .then( logs => Write( target, id, logs, "json", prefix, true ) )
         ) ).then( (_) => updateDataConfig( name, condition, <string[]>input, (<string[]>input).map( id => filename( target, id, "json", prefix ))  ) )
         break;
     case "file":
@@ -137,6 +140,13 @@ switch (mode) {
         for ( let experiment in config ){
             for ( let condition in config[experiment] ){
                 for ( let provider_id of config[experiment][condition].providers ){
+                    // skip 'raw' data sets
+                    let data_config = config[experiment][condition].data[provider_id];
+                    if ( data_config && data_config.source === "raw" ){
+                        queue.then( (_) => { process.stdout.write( `Skipping ${experiment}/${condition}/${provider_id}...` ); return true; } )
+                        continue;
+                    }
+
                     // print message
                     queue = queue.then( (_) => { process.stdout.write( `Fetching ${experiment}/${condition}/${provider_id}...` ); return true; } )
 
@@ -144,10 +154,10 @@ switch (mode) {
                         .then( (_) => Fetch( provider_id, 1, 3 ) )
                     
                         // write logs
-                        .then( logs => Write( target, provider_id, logs, "json", prefix ) )
+                        .then( logs => Write( target, provider_id, logs, "json", prefix, true ) )
 
                         // update config
-                        .then( (_) => updateDataConfig( experiment, condition, provider_id, filename( target, provider_id, "json", prefix ), config ) )
+                        .then( (_) => updateDataConfig( experiment, condition, provider_id, filename( target, provider_id, "json", prefix ), "la", config ) )
 
                         // notify
                         .then( (_) => console.log( "\t [ DONE ]" ) )

@@ -4,7 +4,7 @@ const fs = require("mz/fs");
 const jsmin = require("jsmin");
 const IO_1 = require("./IO");
 const Constants_1 = require("./Constants");
-function updateDataConfig(name, condition, provider, target, config) {
+function updateDataConfig(name, condition, provider, target, source = "la", config) {
     config = config || getDataConfig();
     if (!config[name])
         config[name] = {};
@@ -19,7 +19,7 @@ function updateDataConfig(name, condition, provider, target, config) {
         _condition.providers.push(provider);
         _condition.providers = [...new Set(_condition.providers)]; // unique id's only.
         if (target)
-            _condition.data[provider] = { raw: target }; // keyed by id, will be created or purged
+            _condition.data[provider] = { raw: target, source: source }; // keyed by id, will be created or purged
     }
     // multiple new datasets
     if (Array.isArray(target)) {
@@ -29,7 +29,7 @@ function updateDataConfig(name, condition, provider, target, config) {
         for (let i = 0; i < target.length; i++) {
             _condition.providers.push(provider[i]);
             if (target[i])
-                _condition.data[provider[i]] = { raw: target[i] }; // keyed by id, will be created or purged
+                _condition.data[provider[i]] = { raw: target[i], source: source }; // keyed by id, will be created or purged
         }
         _condition.providers = [...new Set(_condition.providers)]; // unique id's only.
     }
