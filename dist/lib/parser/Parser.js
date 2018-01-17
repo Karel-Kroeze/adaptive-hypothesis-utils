@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const nearley = require("nearley");
+const DEBUG = true;
 var CriteriumErrorReason;
 (function (CriteriumErrorReason) {
     CriteriumErrorReason[CriteriumErrorReason["Syntax"] = 0] = "Syntax";
@@ -83,6 +84,7 @@ class HypothesisParser {
     DoParseCriteria(hypothesis, criteria) {
         let parser = new nearley.Parser(this.grammar);
         let h = GetHypothesisString(hypothesis);
+        let result = [];
         try {
             parser.feed(h);
             let results = parser.finish();
@@ -91,17 +93,22 @@ class HypothesisParser {
                     console.log(JSON.stringify(results, null, 4));
                 }
                 // finished. Syntax OK, check criteria.
-                return criteria.map(criterium => criterium.result(results[0]));
+                result = [CreateParseResult("Syntax", true, results[0]),
+                    ...criteria.map(criterium => criterium.result(results[0]))];
             }
             else {
                 // finish without result or running out of options
-                return [CreateParseResult("Syntax", false, h, CriteriumErrorReason.Incomplete)];
+                result = [CreateParseResult("Syntax", false, h, CriteriumErrorReason.Incomplete),
+                    ...criteria.map(criterium => CreateParseResult(criterium.test, false, h, CriteriumErrorReason.Incomplete))];
             }
         }
         catch (err) {
             // error: ran out of options
-            return [CreateParseResult("Syntax", false, HypothesisParser.MarkFailPosition(h, err.offset), CriteriumErrorReason.Syntax)];
+            let msg = HypothesisParser.MarkFailPosition(h, err.offset);
+            result = [CreateParseResult("Syntax", false, msg, CriteriumErrorReason.Syntax),
+                ...criteria.map(criterium => CreateParseResult(criterium.test, false, msg, CriteriumErrorReason.Syntax))];
         }
+        return result;
     }
 }
 exports.HypothesisParser = HypothesisParser;

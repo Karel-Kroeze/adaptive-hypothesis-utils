@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const json2csv = require("json2csv");
+const nearley_1 = require("nearley");
 const LogType_1 = require("./LogType");
 const HypothesisStory_1 = require("./HypothesisStory");
 const IO_1 = require("../core/IO");
@@ -8,7 +9,8 @@ const Parser_1 = require("../parser/Parser");
 const ParserCriteria_1 = require("../parser/ParserCriteria");
 const PresenceCriteria_1 = require("../parser/PresenceCriteria");
 const Hypothesis_Extensions_1 = require("../core/Hypothesis_Extensions");
-const grammar = require("@golab/hypothesis-grammars")['circuits-nl'];
+const grammar = nearley_1.Grammar.fromCompiled(require("@golab/hypothesis-grammars")['circuits-nl']);
+grammar.start = "HYPOTHESIS";
 const encoding = "utf8";
 class LogParser {
     constructor(expectations = {}, hypotheses = {}, experiments = {}, conclusions = {}) {
@@ -22,6 +24,22 @@ class LogParser {
             this.process(log);
         this.finalize();
         this.summarize();
+        let codesCorrect = {};
+        for (let hypothesis in this.hypotheses) {
+            for (let snapshot of this.hypotheses[hypothesis].snapshots) {
+                if (snapshot.parseResults) {
+                    for (let result of snapshot.parseResults.results) {
+                        if (!codesCorrect[result.test]) {
+                            codesCorrect[result.test] = 0;
+                        }
+                        if (result.success) {
+                            codesCorrect[result.test]++;
+                        }
+                    }
+                }
+            }
+        }
+        console.log(codesCorrect);
         return { experiments: this.experiments, hypotheses: this.hypotheses, conclusions: this.conclusions, expectations: this.expectations };
     }
     summarize() {

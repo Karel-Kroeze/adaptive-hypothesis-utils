@@ -2,6 +2,7 @@ import * as fs from "mz/fs";
 import * as path from "path";
 import * as json2csv from "json2csv";
 import * as mkdirp from 'mkdirp';
+import {Grammar} from 'nearley';
 import {LogType} from './LogType';
 import {HypothesisStory} from './HypothesisStory';
 import {Write} from '../core/IO';
@@ -12,7 +13,8 @@ import { getText } from "../core/Hypothesis_Extensions";
 import { LogAction, Actor } from "../types/LogAction";
 import { ICriteriumResult, IHypothesis, IHypothesisAdaptive, IExpectation, IExperiment, IConclusion } from "../types/Product";
 
-const grammar: nearley.Grammar = require("@golab/hypothesis-grammars")['circuits-nl'];
+const grammar: Grammar = Grammar.fromCompiled( require("@golab/hypothesis-grammars")['circuits-nl'] );
+grammar.start = "HYPOTHESIS";
 const encoding = "utf8";
 
 export type products = { [type:string]: any };
@@ -30,6 +32,25 @@ export class LogParser {
             this.process( log );
         this.finalize();
         this.summarize();
+        
+        let codesCorrect: any = {};
+        for ( let hypothesis in this.hypotheses ){
+            for ( let snapshot of this.hypotheses[hypothesis].snapshots ){
+                if (snapshot.parseResults){
+                    for ( let result of snapshot.parseResults.results ){
+                        if (!codesCorrect[result.test]){
+                            codesCorrect[result.test] = 0;
+                        }
+                        if (result.success){
+                            codesCorrect[result.test]++;
+                        }
+                    }
+                }
+            }
+        }
+        console.log( codesCorrect );
+
+
         return { experiments: this.experiments, hypotheses: this.hypotheses, conclusions: this.conclusions, expectations: this.expectations };
     }
 

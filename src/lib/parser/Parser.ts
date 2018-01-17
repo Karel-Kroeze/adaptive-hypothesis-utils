@@ -2,6 +2,9 @@ import * as nearley from 'nearley';
 import {ParseCriterium, NearleyParse} from './ParserCriteria'; 
 import {PresenceCriterium} from './PresenceCriteria';
 import { IHypothesis, ICriteriumResult, ICriteriumError } from '../types/Product';
+
+const DEBUG = true;
+
 export enum CriteriumErrorReason {
     Syntax,
     Incomplete,
@@ -90,7 +93,7 @@ export class HypothesisParser {
     private DoParseCriteria(hypothesis: IHypothesis, criteria: ParseCriterium[] ): ICriteriumResult[] {
         let parser = new nearley.Parser( this.grammar );
         let h = GetHypothesisString(hypothesis);
-
+        let result: ICriteriumResult[] = [];
         try {
             parser.feed(h);
             let results = <NearleyParse[]>parser.finish();
@@ -99,15 +102,20 @@ export class HypothesisParser {
                     console.log( JSON.stringify( results, null, 4 ) );
                 }
                 // finished. Syntax OK, check criteria.
-                return criteria.map( criterium => criterium.result( results[0] ) );
+                result = [ CreateParseResult( "Syntax", true, results[0] ), 
+                 ... criteria.map( criterium => criterium.result( results[0] ) ) ];
             } else {
                 // finish without result or running out of options
-                return [ CreateParseResult( "Syntax", false, h, CriteriumErrorReason.Incomplete ) ];
+                result = [ CreateParseResult( "Syntax", false, h, CriteriumErrorReason.Incomplete ),
+                 ... criteria.map( criterium => CreateParseResult( criterium.test, false, h, CriteriumErrorReason.Incomplete ) ) ];
             }
         } catch (err) {
             // error: ran out of options
-            
-            return [ CreateParseResult( "Syntax", false, HypothesisParser.MarkFailPosition(h, err.offset), CriteriumErrorReason.Syntax ) ];
-        }
+            let msg = HypothesisParser.MarkFailPosition(h, err.offset);
+                 result = [ CreateParseResult( "Syntax", false, msg, CriteriumErrorReason.Syntax ),
+                  ... criteria.map( criterium => CreateParseResult( criterium.test, false, msg, CriteriumErrorReason.Syntax ) ) ];
+                }
+
+        return result;
     }
 }

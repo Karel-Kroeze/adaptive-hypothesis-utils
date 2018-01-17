@@ -7,4 +7,5 @@ __export(require("./Config"));
 __export(require("./Constants"));
 __export(require("./Hypothesis_Extensions"));
 __export(require("./IO"));
+__export(require("./Products"));
 __export(require("./Utils"));
