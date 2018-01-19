@@ -110,7 +110,7 @@ export class LogParser {
     }
 
     private updateHypothesis( hypothesis: IHypothesis, actor: Actor, timestamp: string ){
-        this.addParseResultsIfMissing( hypothesis, true )        
+        LogParser.addParseResultsIfMissing( hypothesis, true )        
         let id: string = <string>hypothesis.id;
         if (!this.hypotheses.hasOwnProperty( id )){
             this.hypotheses[id] = new HypothesisStory( hypothesis, actor, timestamp );
@@ -120,11 +120,10 @@ export class LogParser {
     }
 
     private parser: HypothesisParser;
-    private addParseResultsIfMissing( hypothesis: IHypothesis, force: boolean = false ){
+    public static addParseResultsIfMissing( hypothesis: IHypothesis, force: boolean = false ){
         if (!force && (<IHypothesisAdaptive>hypothesis).parseResults)
             return;
 
-        grammar.start = "HYPOTHESIS";
         let languageHandler: LanguageHandler = {
             "getMessage": ( template: string, ...pars: string[] ) => {
                 return `template: ${template}\npars:\n\t${pars.join( "\n\t" )}`

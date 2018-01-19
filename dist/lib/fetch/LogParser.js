@@ -93,7 +93,7 @@ class LogParser {
         }
     }
     updateHypothesis(hypothesis, actor, timestamp) {
-        this.addParseResultsIfMissing(hypothesis, true);
+        LogParser.addParseResultsIfMissing(hypothesis, true);
         let id = hypothesis.id;
         if (!this.hypotheses.hasOwnProperty(id)) {
             this.hypotheses[id] = new HypothesisStory_1.HypothesisStory(hypothesis, actor, timestamp);
@@ -102,10 +102,9 @@ class LogParser {
             this.hypotheses[id].update(hypothesis, timestamp);
         }
     }
-    addParseResultsIfMissing(hypothesis, force = false) {
+    static addParseResultsIfMissing(hypothesis, force = false) {
         if (!force && hypothesis.parseResults)
             return;
-        grammar.start = "HYPOTHESIS";
         let languageHandler = {
             "getMessage": (template, ...pars) => {
                 return `template: ${template}\npars:\n\t${pars.join("\n\t")}`;

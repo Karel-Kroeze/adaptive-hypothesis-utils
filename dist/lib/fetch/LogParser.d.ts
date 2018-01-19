@@ -1,7 +1,7 @@
 import { LogType } from './LogType';
 import { HypothesisStory } from './HypothesisStory';
 import { LogAction } from "../types/LogAction";
-import { IExpectation, IExperiment, IConclusion } from "../types/Product";
+import { IHypothesis, IExpectation, IExperiment, IConclusion } from "../types/Product";
 export declare type products = {
     [type: string]: any;
 };
@@ -34,7 +34,7 @@ export declare class LogParser {
     process(log: LogAction): void;
     private updateHypothesis(hypothesis, actor, timestamp);
     private parser;
-    private addParseResultsIfMissing(hypothesis, force?);
+    static addParseResultsIfMissing(hypothesis: IHypothesis, force?: boolean): void;
     private updateExperiment(log);
     private updateConclusion(log);
     private updateExpectation(log);
