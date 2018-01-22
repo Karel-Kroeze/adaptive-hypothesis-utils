@@ -17,6 +17,9 @@ exports.PresenceCriterium = PresenceCriterium;
 class VariablesPresentCriterium extends PresenceCriterium {
     constructor(count = 1) {
         let validator = (hypothesis) => {
+            // for ( let element of hypothesis.elements ) {
+            //     console.log( element, GetElementType( element ) );
+            // }
             return hypothesis.elements.filter(element => GetElementType(element) === "variable").length >= count;
         };
         let feedbackGenerator = (hypothesis, result) => {
@@ -54,9 +57,9 @@ const modifierDictionary = [
     "remains the same"
 ];
 function GetElementType(element) {
-    if (modifierDictionary.some(modifier => modifier === element.text)) {
+    if (modifierDictionary.some(modifier => modifier === element.text[0])) {
         return "modifier";
     }
-    return element.type;
+    return element.type[0];
 }
 exports.GetElementType = GetElementType;
