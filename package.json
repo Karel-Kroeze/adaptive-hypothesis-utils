@@ -9,7 +9,8 @@
   },
   "bin": {
     "fetch": "./dist/bin/fetch.js",
-    "process": "./dist/bin/process.js"
+    "process": "./dist/bin/process.js",
+    "extract": "./dist/bin/extract.js"
   },
   "author": "Karel A. Kroeze <k.a.kroeze@utwente.nl>",
   "license": "MIT",

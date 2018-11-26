@@ -57,9 +57,13 @@ const modifierDictionary = [
     "remains the same"
 ];
 function GetElementType(element) {
-    if (modifierDictionary.some(modifier => modifier === element.text[0])) {
+    let text = Array.isArray(element.text) ? element.text[0] : element.text;
+    let type = Array.isArray(element.type) ? element.type[0] : element.type;
+    // TODO: investigate why element.text and element.type have become arrays in some datasets.
+    // console.log( text, type )
+    if (modifierDictionary.some(modifier => modifier === text)) {
         return "modifier";
     }
-    return element.type[0];
+    return type;
 }
 exports.GetElementType = GetElementType;

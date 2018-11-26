@@ -27,12 +27,12 @@ export declare class LogParser {
     }, conclusions?: {
         [id: string]: IConclusion;
     });
-    processAll(logs: LogAction[]): products;
+    processAll(logs: LogAction[], forceParseResultsUpdate?: boolean): products;
     summarize(): void;
     finalize(): products;
     store(dir: string, name: string): void;
-    process(log: LogAction): void;
-    private updateHypothesis(hypothesis, actor, timestamp);
+    process(log: LogAction, forceParseResultsUpdate?: boolean): void;
+    private updateHypothesis(hypothesis, actor, timestamp, forceParseResultsUpdate?);
     private parser;
     static addParseResultsIfMissing(hypothesis: IHypothesis, force?: boolean): void;
     private updateExperiment(log);

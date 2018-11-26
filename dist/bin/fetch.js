@@ -7,6 +7,7 @@ const fs = require("mz/fs");
 const Config_1 = require("../lib/core/Config");
 const IO_1 = require("../lib/core/IO");
 const DBDumpParser_1 = require("../lib/fetch/DBDumpParser");
+const index_1 = require("../lib/index");
 const Promise = bluebird.Promise;
 const docstring = `
 Log fetcher.
@@ -16,10 +17,12 @@ Usage:
     fetch --scaffold [<name> <condition>] [-d]
     fetch --id <name> <condition> <provider_id> <provider_id>... [-d]
     fetch --db <name> <condition> <provider_id> <input_file> [<output_file> -d]
+    fetch --raw <name> <condition> <provider_id> <input_file> [<output_file> -d]
 
 Modes:
     (default)   fetch logs given in datasets.json, store in <output_dir>, optionally with <prefix>
     --scaffold  scaffold a datasets.json file
+    --raw       add raw log files
     --db        parse and store as json a given mongodb dump file (JSON-like, but not quite)
     --id        fetch the logs for specified provider ids
     
@@ -41,12 +44,19 @@ if (opts['--id'])
     mode = "ids";
 if (opts['--scaffold'])
     mode = "scaffold";
+if (opts['--raw'])
+    mode = "raw";
 // process input
 let input;
 let db_dump = "";
+let raw_file = "";
 switch (mode) {
     case "db":
         db_dump = opts['<input_file>'];
+        input = opts['<provider_id>'][0];
+        break;
+    case "raw":
+        raw_file = opts['<input_file>'];
         input = opts['<provider_id>'][0];
         break;
     case "ids":
@@ -60,7 +70,7 @@ switch (mode) {
 if (debug)
     console.log(opts, mode, input);
 // stop on no input, echo docstring
-if ((mode === "db" || mode === "ids") && (!input || !input.length)) {
+if ((mode === "db" || mode === "ids" || mode === "raw") && (!input || !input.length)) {
     console.error("no input given");
     console.log(docstring);
     process.exit(-1);
@@ -72,6 +82,7 @@ let name = opts['<name>'];
 let condition = opts['<condition>'];
 switch (mode) {
     case "db":
+    case "raw":
         target = opts['<output_file>'] || input;
         break;
     case "ids":
@@ -112,6 +123,15 @@ switch (mode) {
         // parse a db dump as json, and update datasets.json
         console.log("Parsing", db_dump, ", storing in", target);
         DBDumpParser_1.ParseDBDump(db_dump, false, true)
+            .then(logs => { console.log(logs.length); return logs; })
+            .then(logs => IO_1.Write("./data/raw", target, logs, "json", prefix, true))
+            .then(logs => Config_1.updateDataConfig(name, condition, input, IO_1.filename("./data/raw", target, "json"), "raw"))
+            .catch(console.error);
+        break;
+    case "raw":
+        // move json, and update datasets.json
+        console.log("Adding", raw_file, ", storing in ", target);
+        index_1.ReadJsonArray(raw_file)
             .then(logs => { console.log(logs.length); return logs; })
             .then(logs => IO_1.Write("./data/raw", target, logs, "json", prefix, true))
             .then(logs => Config_1.updateDataConfig(name, condition, input, IO_1.filename("./data/raw", target, "json"), "raw"))

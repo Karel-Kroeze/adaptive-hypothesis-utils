@@ -5,6 +5,7 @@ import * as fs from 'mz/fs';
 import {updateDataConfig, getDataConfig} from '../lib/core/Config';
 import {filename, Fetch, Write} from '../lib/core/IO';
 import {ParseDBDump} from '../lib/fetch/DBDumpParser';
+import { ReadJsonArray } from '../lib/index';
 
 const Promise = bluebird.Promise;
 const docstring = `
@@ -15,10 +16,12 @@ Usage:
     fetch --scaffold [<name> <condition>] [-d]
     fetch --id <name> <condition> <provider_id> <provider_id>... [-d]
     fetch --db <name> <condition> <provider_id> <input_file> [<output_file> -d]
+    fetch --raw <name> <condition> <provider_id> <input_file> [<output_file> -d]
 
 Modes:
     (default)   fetch logs given in datasets.json, store in <output_dir>, optionally with <prefix>
     --scaffold  scaffold a datasets.json file
+    --raw       add raw log files
     --db        parse and store as json a given mongodb dump file (JSON-like, but not quite)
     --id        fetch the logs for specified provider ids
     
@@ -35,17 +38,23 @@ const opts = docopt.docopt( docstring, {} )
 let debug = opts['--debug'];
 
 // determine mode
-let mode: "file" | "db" | "ids" | "scaffold" = "file";
+let mode: "file" | "raw" | "db" | "ids" | "scaffold" = "file";
 if (opts['--db']) mode = "db";
 if (opts['--id']) mode = "ids";
 if (opts['--scaffold']) mode = "scaffold";
+if (opts['--raw']) mode = "raw";
 
 // process input
 let input: string | string[];
 let db_dump: string = "";
+let raw_file: string = "";
 switch (mode) {
     case "db":
         db_dump = opts['<input_file>'];
+        input = opts['<provider_id>'][0];
+        break;
+    case "raw":
+        raw_file = opts['<input_file>'];
         input = opts['<provider_id>'][0];
         break;
     case "ids":
@@ -60,7 +69,7 @@ switch (mode) {
 if (debug) console.log( opts, mode, input );
 
 // stop on no input, echo docstring
-if ( ( mode === "db" || mode === "ids" ) && ( !input || !input.length ) ) {
+if ( ( mode === "db" || mode === "ids" || mode === "raw" ) && ( !input || !input.length ) ) {
     console.error( "no input given" )
     console.log( docstring );
     process.exit( -1 );
@@ -73,6 +82,7 @@ let name: string = opts['<name>'];
 let condition: string = opts['<condition>'];
 switch (mode) {
     case "db":
+    case "raw":
         target = opts['<output_file>'] || input;
         break;
     case "ids":
@@ -122,6 +132,16 @@ switch (mode) {
             .then( logs => Write( "./data/raw", target, logs, "json", prefix, true ) )
             .then( logs => updateDataConfig( name, condition, <string>input, filename( "./data/raw", target, "json" ), "raw" ) )
             .catch( console.error );        
+        break;
+
+    case "raw":
+        // move json, and update datasets.json
+        console.log( "Adding", raw_file, ", storing in ", target );
+        ReadJsonArray( raw_file )
+            .then( logs => { console.log( logs.length ); return logs } )
+            .then( logs => Write( "./data/raw", target, logs, "json", prefix, true ) )
+            .then( logs => updateDataConfig( name, condition, <string>input, filename( "./data/raw", target, "json" ), "raw" ) )
+            .catch( console.error );
         break;
 
     case "ids":

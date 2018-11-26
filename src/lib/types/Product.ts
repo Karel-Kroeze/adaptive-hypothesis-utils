@@ -52,6 +52,7 @@ export interface IHypothesisUpdate extends IHypothesis {
 
 export interface IHypothesisSnapshot extends IHypothesisUpdate {
     reason: string
+    parseResults: ICodeResult
 }
 
 export interface IProduct {
@@ -59,8 +60,8 @@ export interface IProduct {
 }
 
 export interface IHypothesisStory extends IProduct {
-    snapshots: IHypothesis[];
-    updates: IHypothesis[];
+    snapshots: IHypothesisSnapshot[];
+    updates: IHypothesisUpdate[];
 }
 
 export interface IHypothesisElement {

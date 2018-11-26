@@ -21,6 +21,7 @@ Options:
     -p <string>, --prefix <string>          prefix for output files [default: ${DEFAULT_PREFIX}]
     -h, --help                              show this message
     -d, --debug                             print debug information
+    -F, --forceUpdate                       force parse results update [default: false]
 `;
 // read args
 let args = docopt.docopt(docstring, {});
@@ -32,7 +33,8 @@ let opts = {
     debug: args['--debug'],
     config: args['--config'],
     output_dir: args['--out'],
-    prefix: args['--prefix']
+    prefix: args['--prefix'],
+    forceUpdate: args['--forceUpdate']
 };
 if (opts.debug)
     console.log(opts);
@@ -140,7 +142,7 @@ if (opts.mode === "products") {
             return logs.filter(log => users.indexOf(log.actor.displayName) >= 0);
         });
         // do our thing
-        let products = logs.then(logs => new LogParser_1.LogParser().processAll(logs));
+        let products = logs.then(logs => new LogParser_1.LogParser().processAll(logs, opts.forceUpdate));
         products.catch(err => {
             console.log("UNHANDLED EXCEPTION: ", err.stackTrace, err);
         });

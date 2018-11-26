@@ -19,27 +19,29 @@ class LogParser {
         this.experiments = experiments;
         this.conclusions = conclusions;
     }
-    processAll(logs) {
+    processAll(logs, forceParseResultsUpdate = false) {
         for (let log of logs)
-            this.process(log);
+            this.process(log, forceParseResultsUpdate);
         this.finalize();
         this.summarize();
-        let codesCorrect = {};
-        for (let hypothesis in this.hypotheses) {
-            for (let snapshot of this.hypotheses[hypothesis].snapshots) {
-                if (snapshot.parseResults) {
-                    for (let result of snapshot.parseResults.results) {
-                        if (!codesCorrect[result.test]) {
-                            codesCorrect[result.test] = 0;
-                        }
-                        if (result.success) {
-                            codesCorrect[result.test]++;
+        if (forceParseResultsUpdate) {
+            let codesCorrect = {};
+            for (let hypothesis in this.hypotheses) {
+                for (let snapshot of this.hypotheses[hypothesis].snapshots) {
+                    if (snapshot.parseResults) {
+                        for (let result of snapshot.parseResults.results) {
+                            if (!codesCorrect[result.test]) {
+                                codesCorrect[result.test] = 0;
+                            }
+                            if (result.success) {
+                                codesCorrect[result.test]++;
+                            }
                         }
                     }
                 }
             }
+            console.log(codesCorrect);
         }
-        console.log(codesCorrect);
         return { experiments: this.experiments, hypotheses: this.hypotheses, conclusions: this.conclusions, expectations: this.expectations };
     }
     summarize() {
@@ -65,13 +67,13 @@ class LogParser {
         let csvString = this.getHypothesesCsvString();
         IO_1.Write(dir, "hypotheses-" + name, csvString, "csv");
     }
-    process(log) {
+    process(log, forceParseResultsUpdate = false) {
         switch (LogParser.getLogType(log)) {
             case LogType_1.LogType.hypothesesUpdate:
-                log.object.content.content.forEach((hypothesis) => this.updateHypothesis(hypothesis, log.actor, log.published));
+                log.object.content.content.forEach((hypothesis) => this.updateHypothesis(hypothesis, log.actor, log.published, forceParseResultsUpdate));
                 break;
             case LogType_1.LogType.hypothesesChange:
-                this.updateHypothesis(log.object.content, log.actor, log.published);
+                this.updateHypothesis(log.object.content, log.actor, log.published, forceParseResultsUpdate);
                 break;
             case LogType_1.LogType.hypothesesFeedback:
                 this.snapshotHypothesis(log.object.id, 'feedback', log.published);
@@ -92,8 +94,8 @@ class LogParser {
                 break;
         }
     }
-    updateHypothesis(hypothesis, actor, timestamp) {
-        LogParser.addParseResultsIfMissing(hypothesis, true);
+    updateHypothesis(hypothesis, actor, timestamp, forceParseResultsUpdate = false) {
+        LogParser.addParseResultsIfMissing(hypothesis, forceParseResultsUpdate);
         let id = hypothesis.id;
         if (!this.hypotheses.hasOwnProperty(id)) {
             this.hypotheses[id] = new HypothesisStory_1.HypothesisStory(hypothesis, actor, timestamp);

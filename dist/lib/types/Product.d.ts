@@ -38,13 +38,14 @@ export interface IHypothesisUpdate extends IHypothesis {
 }
 export interface IHypothesisSnapshot extends IHypothesisUpdate {
     reason: string;
+    parseResults: ICodeResult;
 }
 export interface IProduct {
     actor: Actor;
 }
 export interface IHypothesisStory extends IProduct {
-    snapshots: IHypothesis[];
-    updates: IHypothesis[];
+    snapshots: IHypothesisSnapshot[];
+    updates: IHypothesisUpdate[];
 }
 export interface IHypothesisElement {
     text: string;
